@@ -1,4 +1,4 @@
-angular.module("angular-context-menu")
+angular.module("rc-context-popup")
 
     .factory("contextMenu", function() {
         return {
