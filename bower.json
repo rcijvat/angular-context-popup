@@ -1,0 +1,20 @@
+{
+  "name": "angular-context-menu",
+  "main": "index.js",
+  "authors": [
+    "R. Cijvat <robin.cijvat@monetdbsolutions.com>"
+  ],
+  "description": "Angular directives for creating context popups that open and close on click of a specified element.",
+  "moduleType": [],
+  "keywords": [
+    "angular",
+    "context",
+    "menu"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {
+    "angular": "~1.4.8",
+    "ui.bootstrap": "~0.14.3"
+  }
+}
