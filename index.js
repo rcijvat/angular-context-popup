@@ -1,4 +1,4 @@
-angular.module("rc-context-popup")
+angular.module("rc-context-popup", [])
 
     .factory("contextPopup", function() {
         return {
