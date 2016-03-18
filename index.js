@@ -63,6 +63,7 @@ angular.module("rc-context-popup", [])
                             var e = contextPopup.activeElem;
                             $timeout(function() {
                                 e.css("display", "none");
+                                $rootScope.$emit("contextpopupclosed");
                             }, 300);
                             contextPopup.onClose && contextPopup.onClose();
                             contextPopup.activeElem = null;
