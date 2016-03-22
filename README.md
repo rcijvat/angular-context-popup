@@ -26,3 +26,16 @@ To programmatically close all context popups, emit the "contextpopupclose" event
 ```javascript
 $rootScope.$emit("contextpopupclose")
 ```
+
+
+### Dragging context popup
+Context popups can define a handle that can be used to drag them around. Example:
+
+```html
+<div id="some-unique-context-popup-id">
+    <h3 context-popup-drag-handle>This h3 tag will be the drag handle for this popover</h3>
+    This basically is the template for your context popup. You can put any HTML in here.
+    The Angular scope of this template is inherited from the scope in which this div is defined.
+</div>
+
+<button type="button" context-popup-bind="some-unique-context-popup-id">Open context popup</button>

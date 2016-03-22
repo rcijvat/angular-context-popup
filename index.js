@@ -82,28 +82,89 @@ angular.module("rc-context-popup", [])
         }])
 
     .directive("contextPopup", function() {
-        return function(scope, elem) {
-            var transition = ".3s opacity";
-            var shadow = "0 6px 12px rgba(0,0,0,.175)";
-            elem.css({
-                "display": "none",
-                "opacity": 0,
-                "position": "fixed",
-                "z-index": 9999,
-                "background-color": "#fff",
-                "-o-transition": transition,
-                "-webkit-transition": transition,
-                "-moz-transition": transition,
-                "transition": transition,
-                "-webkit-box-shadow": shadow,
-                "-mox-box-shadow": shadow,
-                "-o-box-shadow": shadow,
-                "box-shadow": shadow
-            });
-            elem.bind("click", function(event) {
-                /*event.preventDefault();*/ // if enabled, hinders checkbox selection of checkboxes inside contextPopup
-                event.stopPropagation();
-            });
+        return {
+            controller: function($element) {
+                this.getPos = function() {
+                    var bbox = $element[0].getBoundingClientRect();
+                    return [bbox.left, bbox.top];
+                };
+
+                this.setPos = function(pos) {
+                    $element.css("left", pos[0]+"px")
+                        .css("top", pos[1]+"px")
+                };
+            },
+            link: function(scope, elem) {
+                var transition = ".3s opacity";
+                var shadow = "0 6px 12px rgba(0,0,0,.175)";
+                elem.css({
+                    "display": "none",
+                    "opacity": 0,
+                    "position": "fixed",
+                    "z-index": 9999,
+                    "background-color": "#fff",
+                    "-o-transition": transition,
+                    "-webkit-transition": transition,
+                    "-moz-transition": transition,
+                    "transition": transition,
+                    "-webkit-box-shadow": shadow,
+                    "-mox-box-shadow": shadow,
+                    "-o-box-shadow": shadow,
+                    "box-shadow": shadow
+                });
+                elem.bind("click", function (event) {
+                    /*event.preventDefault();*/ // if enabled, hinders checkbox selection of checkboxes inside contextPopup
+                    event.stopPropagation();
+                });
+            }
         };
-    });
+    })
+
+    .directive("contextPopupDragHandle", ["$document", function($document) {
+        return {
+            require: "^contextPopup",
+            link: function(scope, elem, attr, contextPopupCtrl) {
+                var dragging = false;
+                var startCoords = null;
+                var originalPos = null;
+                elem.css("cursor", "move");
+
+                function mousedown(e) {
+                    if(dragging) return;
+                    dragging = true;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    startCoords = [e.clientX, e.clientY];
+                    originalPos = contextPopupCtrl.getPos();
+                }
+
+                function mouseup(e) {
+                    if(!dragging) return;
+                    dragging = false;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    startCoords = null;
+                    originalPos = null;
+                }
+
+                function mousemove(e) {
+                    if(!dragging) return;
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var delta = [e.clientX - startCoords[0], e.clientY - startCoords[1]];
+                    contextPopupCtrl.setPos([originalPos[0] + delta[0], originalPos[1] + delta[1]]);
+                }
+
+                elem.bind("mousedown", mousedown);
+                elem.bind("mouseup", mouseup);
+                $document.bind("mousemove", mousemove); // bind mousemove to document, so the mouse cannot leave the handle unexpectedly
+
+                scope.$on("$destroy", function() {
+                    elem.unbind("mousedown", mousedown);
+                    elem.unbind("mouseup", mouseup);
+                    $document.unbind("mousemove", mousemove);
+                });
+            }
+        };
+    }]);
 
