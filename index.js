@@ -156,12 +156,12 @@ angular.module("rc-context-popup", [])
                 }
 
                 elem.bind("mousedown", mousedown);
-                elem.bind("mouseup", mouseup);
+                $document.bind("mouseup", mouseup); // bind mouseup to document, so we always register a mouseup while dragging
                 $document.bind("mousemove", mousemove); // bind mousemove to document, so the mouse cannot leave the handle unexpectedly
 
                 scope.$on("$destroy", function() {
                     elem.unbind("mousedown", mousedown);
-                    elem.unbind("mouseup", mouseup);
+                    $document.unbind("mouseup", mouseup);
                     $document.unbind("mousemove", mousemove);
                 });
             }
